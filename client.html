@@ -6,7 +6,7 @@
     <script src="/lib/jquery.cookie.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#team').text("Your team : " + document.cookie.split('=')[1]);
+            $('#team').text("Your team : " + $.cookie("team"));
             var socket = io.connect();
             socket.on('message', function (data) {
                 var obj = JSON.parse(data);

@@ -7,7 +7,7 @@ var team;
 
 app.listen(8000);
 app.use(express.bodyParser());
-app.use(express.static(__dirname + '/lib'));
+app.use('/lib',express.static(__dirname + '/lib'));
 
 app.get('/', function (req, res) {
     res.sendfile(__dirname + '/team.html');
