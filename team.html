@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("button").click(function(event) {
+                var teamValue = $(this).val();
+                $('.team').val(teamValue);
+                $('form').submit();
+            });
+        });
+    </script>
+    <title>Choose your team :</title>
+</head>
+<body>
+<h1></h1>
+<h2>Choose your team :</h2>
+<form action="/login" method="post">
+    <input name="team" type="hidden" class="team" />
+    <button value="1">1</button>
+    <button value="2">2</button>
+    <button value="3">3</button>
+</form>
+</body>
+</html>

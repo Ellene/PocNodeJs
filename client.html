@@ -1,10 +1,12 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Duchess France Quizz</title>
-    <script src="http://code.jquery.com/jquery-1.5.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.7.min.js"></script>
+    <script src="/lib/jquery.cookie.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#team').text("Your team : " + document.cookie.split('=')[1]);
             var socket = io.connect();
             socket.on('message', function (data) {
                 var obj = JSON.parse(data);
@@ -21,6 +23,7 @@
 </head>
 <body>
 <div>
+    <h1 id="team"></h1>
     <h2>Which one ?</h2>
     <button id="btnA" value="A">A</button>
     <button id="btnB" value="B">B</button>

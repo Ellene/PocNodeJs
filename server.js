@@ -1,27 +1,24 @@
-var app = require('http').createServer(handler),
+var express = require('express'),
+    app = express(),
     io = require('socket.io').listen(app),
     fs = require('fs');
 
+var team;
+
 app.listen(8000);
+app.use(express.bodyParser());
+app.use(express.static(__dirname + '/lib'));
 
+app.get('/', function (req, res) {
+    res.sendfile(__dirname + '/team.html');
+});
 
-
-var allClients = 0;
-var clientId = 1;
-
-// on server started we can load our client.html page
-function handler ( req, res ) {
-    fs.readFile( __dirname + '/client.html' ,
-        function ( err, data ) {
-            if ( err ) {
-                console.log( err );
-                res.writeHead(500);
-                return res.end( 'Error loading client.html' );
-            }
-            res.writeHead( 200 );
-            res.end( data );
-        });
-};
+app.post('/login', function (req, res) {
+    console.log(req.param('team')+" is connected");
+    team = req.param('team');
+    res.sendfile(__dirname + '/client.html');
+    res.cookie('team', team)
+});
 
 io.sockets.on('connection', function (client) {
     var my_timer;
@@ -39,13 +36,6 @@ io.sockets.on('connection', function (client) {
             "clients": allClients
         }));
     }, 1000);
-
-    client.on('message', function(data) {
-        my_client.obj.broadcast.send(JSON.stringify({
-            message: "poke send by client " + my_client.id
-        }));
-        console.log(data);
-    });
 
     client.on('disconnect', function() {
         clearTimeout(my_timer);
