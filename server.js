@@ -1,25 +1,61 @@
-var express = require('express'),
-    app = express(),
-    io = require('socket.io').listen(app),
-    fs = require('fs');
+// Express config
+var express = require('express');
+var app = express();
 
-var team;
+app.configure(function () {
+    app.set('port', process.env.PORT || 8000);
+    app.set('views', __dirname + '/views');
+    app.set('view engine', 'jade');
+    app.use(express.favicon());
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());
+    app.use(express.cookieParser());
+    app.use(express.session({ secret: "duchess-france" }));
+    app.use(app.router);
+    app.use(express.static(__dirname + '/public'));
+});
+app.configure('development', function () {
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+app.configure('production', function () {
+    app.use(express.errorHandler());
+});
 
-app.listen(8000);
-app.use(express.bodyParser());
-app.use('/lib',express.static(__dirname + '/lib'));
+var isAuthenticated = function (req) {
+    return req.session['team'];
+}
+var restricted = function (req, res, next) {
+    if (!isAuthenticated(req)) res.redirect('/login');
+    else next();
+}
 
+// Express routes
 app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/team.html');
+    res.redirect('/game');
 });
-
+app.get('/login', function (req, res) {
+    if (isAuthenticated(req)) res.redirect('game');
+    else res.render('login');
+});
 app.post('/login', function (req, res) {
-    console.log(req.param('team')+" is connected");
-    team = req.param('team');
-    res.sendfile(__dirname + '/client.html');
-    res.cookie('team', team)
+    var team = req.param('team');
+    console.log(team + " is connected");
+    req.session.team = team;
+    res.redirect('game');
+});
+app.get('/game', restricted, function (req, res) {
+    res.render('game', { team: req.session.team });
+});
+app.get('/logout', restricted, function (req, res) {
+    delete req.session.team;
+    res.redirect('/');
+});
+app.listen(app.get('port'), function () {
+    console.log("Express server listening on port " + app.get('port'));
 });
 
+// Socket.IO
+var io = require('socket.io').listen(app);
 io.sockets.on('connection', function (client) {
     var my_timer;
     var my_client = {
@@ -37,7 +73,7 @@ io.sockets.on('connection', function (client) {
         }));
     }, 1000);
 
-    client.on('disconnect', function() {
+    client.on('disconnect', function () {
         clearTimeout(my_timer);
         allClients -= 1;
         console.log('disconnect');

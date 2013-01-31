@@ -1,0 +1,39 @@
+{
+    "name": "Poc-Node",
+    "version": "0.0.1",
+    "description": "A poc with node, complete app incoming...",
+    "author": "Ellene Dijoux <ellene.dijoux@gmail.com>",
+    "homepage": "https://github.com/Ellene/PocNodeJs",
+    "keywords": [
+        "quizz"
+    ],
+    "contributors": ["Romain Maton <romain.maton@gmail.com>"],
+
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Ellene/PocNodeJs.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Ellene/PocNodeJs/issues"
+    },
+
+    "main": "./server.js",
+    "engine": "node >= 0.6.6",
+    "dependencies": {
+        "express": "3.x",
+        "socket.io": "0.9.x"
+    },
+    "devDependencies": {
+        "nodemon": "*",
+        "mocha": "*",
+        "should": "*"
+    },
+
+    "scripts": {
+        "start": "node server.js",
+        "debug": "nodemon server.js",
+        "start-prod": "forever start server.js",
+        "stop-prod": "forever stop server.js",
+        "update": "npm install"
+    }
+}
