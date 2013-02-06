@@ -5,9 +5,16 @@ html
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.2/jquery.cookie.min.js')
     script(src='/javascripts/game.js')
+    script(src='/javascripts/bootstrap.min.js')
+    link(rel='stylesheet', href='/css/bootstrap.min.css')
   body
-    h1(id='team') Your team: #{team}
-    h2 Which one?
-    button(id='btnA', value='A') A
-    button(id='btnB', value='B') B
-    button(id='btnC', value='C') C
+    div.hero-unit
+        h1(id='team') Your team: #{team}
+        h2 Which one?
+        div.row
+            div.span1
+                a(id='btnA', value='A', class='btn btn-danger btn-large') A
+            div.span1
+                a(id='btnB', value='B', class='btn btn-danger btn-large') B
+            div.span1
+                a(id='btnC', value='C', class='btn btn-danger btn-large') C
